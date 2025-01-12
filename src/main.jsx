@@ -8,13 +8,9 @@ import ChatPage from './routes/chatPage/ChatPage';
 import RootLayout from './layouts/rootLayout/RootLayout';
 import DashboardLayout from './layouts/dashboardLayout/DashboardLayout';
 import { ClerkProvider } from '@clerk/clerk-react';
+import SignInPage from './routes/signInPage/signInPage';
+import SignUpPage from './routes/signUpPage/signUpPage';
 
-
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY //how to import .env variables without exposure
-
-if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Publishable Key")
-}
 
 
 const router = createBrowserRouter([
@@ -24,6 +20,14 @@ const router = createBrowserRouter([
         {
           path: "/",
           element: <Homepage />
+        },
+        {
+          path: "/sign-in/*",
+          element: <SignInPage />
+        },
+        {
+          path: "sign-up/*",
+          element: <SignUpPage />
         },
         {
           element: <DashboardLayout/>,

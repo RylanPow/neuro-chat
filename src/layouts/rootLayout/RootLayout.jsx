@@ -1,6 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 import './rootLayout.css'
-import { ClerkProvider, SignedOut, SignIn, SignInButton, UserButton } from "@clerk/clerk-react";
+import { ClerkProvider, SignedOut, Signin, SignedIn, SignInButton, UserButton } from "@clerk/clerk-react";
 
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY //how to import .env variables without exposure
@@ -15,7 +15,7 @@ const RootLayout = () => {
         <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
         <div className="rootLayout">
             <header>
-                <Link to = "/">
+                <Link to = "/" className="logo">
                     <img src="/logo.png" alt="" />
                     <span>NeuroChat</span>
                 </Link>
@@ -24,9 +24,9 @@ const RootLayout = () => {
                     <SignedOut>
                         <SignInButton/>
                     </SignedOut>
-                    <SignIn>
+                    <SignedIn>
                         <UserButton />
-                    </SignIn>
+                    </SignedIn>
                 </div>
                 </header>
             <main>
