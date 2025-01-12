@@ -7,6 +7,15 @@ import DashboardPage from './routes/dashboardPage/DashboardPage';
 import ChatPage from './routes/chatPage/ChatPage';  
 import RootLayout from './layouts/rootLayout/RootLayout';
 import DashboardLayout from './layouts/dashboardLayout/DashboardLayout';
+import { ClerkProvider } from '@clerk/clerk-react';
+
+
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY //how to import .env variables without exposure
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key")
+}
+
 
 const router = createBrowserRouter([
     {
