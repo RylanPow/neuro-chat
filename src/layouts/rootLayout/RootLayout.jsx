@@ -1,6 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 import './rootLayout.css'
-import { ClerkProvider, SignedOut, Signin, SignedIn, SignInButton, UserButton } from "@clerk/clerk-react";
+import { ClerkProvider, SignedOut, SignedIn, SignInButton, UserButton } from "@clerk/clerk-react";
 
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY //how to import .env variables without exposure
