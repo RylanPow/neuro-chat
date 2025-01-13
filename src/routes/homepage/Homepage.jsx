@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 const Homepage = () => {
     return (
     <div className="homepage">
+        <img src="/orbital.png" alt ="" className = 'orbital'/>
         <div className="left">
         <h1>NeuroChat</h1>
         <h2>Supercharge productivity with the latest in LLM technology</h2>
