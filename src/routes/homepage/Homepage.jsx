@@ -1,3 +1,4 @@
+import { TypeAnimation } from 'react-type-animation'
 import './homepage.css'
 import { Link } from 'react-router-dom'
 const Homepage = () => {
@@ -18,6 +19,23 @@ const Homepage = () => {
                     <div className='bg'></div>
                 </div>
                 <img src="bot.png" alt="" className ='bot'/>
+                <div className="chat">
+                    <img src = '/bot.png' alt = ""/>
+                    <TypeAnimation
+                        sequence={[
+                            "Wumpus",
+                            1000,
+                            "is",
+                            1000,
+                            "thinking.",
+                            1000,
+                        ]}
+                        wrapper = "span"
+                        speed = {50}
+                        style = {{fontSize: '2em', display: 'inline-block'}}
+                        repeat = {Infinity}
+                    />
+                </div>
             </div>
         </div>
     </div>
