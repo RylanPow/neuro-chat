@@ -32,7 +32,8 @@ const Homepage = () => {
                         ]}
                         wrapper = "span"
                         speed = {50}
-                        style = {{fontSize: '2em', display: 'inline-block'}}
+                        cursor = {true}
+                        omitDeletionAnimation = {true}
                         repeat = {Infinity}
                     />
                 </div>
