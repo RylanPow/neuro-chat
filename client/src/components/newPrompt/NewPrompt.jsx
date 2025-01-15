@@ -1,17 +1,17 @@
 import './newPrompt.css'
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const NewPrompt = () => {
 
     const endRef = useRef(null);
 
     useEffect(() => {
-        endRef.current.scrollIntoView({behavior: 'smooth'})
+        endRef.current.scrollIntoView({behavior: "smooth"})
     }, []);
 
     return (
         <>
-        <div className="endChat"></div>
+        <div className="endChat" ref={endRef}></div>
             <form className = 'newForm'>
                 <upload />
                 <label htmlFor='file'>

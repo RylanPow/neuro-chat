@@ -8,7 +8,7 @@
     
     .wrapper {
         flex: 1;
-        overflow: scroll;
+        overflow: auto;
         width: 100%;
         display: flex;
         justify-content: center;

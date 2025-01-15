@@ -1,5 +1,6 @@
 import './chatPage.css'
 import NewPrompt from '../../components/newPrompt/NewPrompt';
+import { useRef } from 'react';
 
 const ChatPage = () => {
 
@@ -15,8 +16,15 @@ const ChatPage = () => {
                     <div className="message user">Test message from user</div>
                     <div className="message">Test message from AI</div>
                     <div className="message user">Test message from user</div>
+                    <div className="message">Test message from AI</div>
+                    <div className="message user">Test message from user</div>                    <div className="message">Test message from AI</div>
+                    <div className="message user">Test message from user</div>                    <div className="message">Test message from AI</div>
+                    <div className="message user">Test message from user</div>                    <div className="message">Test message from AI</div>
+                    <div className="message user">Test message from user</div>                    <div className="message">Test message from AI</div>
+                    <div className="message user">Test message from user</div>                    <div className="message">Test message from AI</div>
+                    <div className="message user">Test message from user</div>                    <div className="message">Test message from AI</div>
+                    <div className="message user">Test message from user</div>
                     <NewPrompt/>
-                    <div ref = {endRef}/>
                 </div>
             </div>
         </div>
