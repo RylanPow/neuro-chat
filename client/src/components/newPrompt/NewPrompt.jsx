@@ -13,6 +13,7 @@ const NewPrompt = () => {
         <>
         <div className="endChat"></div>
             <form className = 'newForm'>
+                <upload />
                 <label htmlFor='file'>
                     <img src = "/attachment.png" alt = '' />
                 </label>
