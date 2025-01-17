@@ -13,10 +13,29 @@
         display: flex;
         justify-content: center;
 
+        &::-webkit-scrollbar {
+            width: 8px;  /* width of the scrollbar */
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #1e1e24;  /* color of the track */
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #4a4a4a;  /* color of the scroll thumb */
+            border-radius: 4px;  /* roundness of the scroll thumb */
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: #555;  /* color of the scroll thumb on hover */
+        }
+
+
         .chat {
             width: 50%;
             display: flex;
             flex-direction: column;
+            gap: 20px;
 
             .message {
                 padding: 20px;
