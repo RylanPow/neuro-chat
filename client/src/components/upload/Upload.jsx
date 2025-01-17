@@ -1,8 +1,8 @@
-import './upload.css'
-import { IKContext, IKImage } from 'imagekitio-react';
+import { IKContext, IKImage, IKUpload } from 'imagekitio-react';
 
 const urlEndpoint = import.meta.env.VITE_IMAGE_KIT_ENDPOINT;
-const publicKey = import.meta.VITE_IMAGE_KIT_PUBLIC_KEY; 
+const publicKey = import.meta.env.VITE_IMAGE_KIT_PUBLIC_KEY; 
+
 const authenticator =  async () => {
     try {
         const response = await fetch('http://localhost:3000/api/upload');
@@ -20,23 +20,24 @@ const authenticator =  async () => {
     }
 };
 
-const Upload = () => {
-
-    
-const onError = err => {
+const Upload = ({setImg}) => {
+  const onError = (err) => {
     console.log("Error", err);
   };
   
-  const onSuccess = res => {
+  const onSuccess = (res) => {
     console.log("Success", res);
+    setImg((prev) => ({...prev, isLoading: false, dbData: res}));
+
   };
   
-  const onUploadProgress = progress => {
+  const onUploadProgress = (progress) => {
     console.log("Progress", progress);
   };
   
-  const onUploadStart = evt => {
+  const onUploadStart = (evt) => {
     console.log("Start", evt);
+    setImg(prev => ({...prev, isLoading: true}))
   };
 
     return (
@@ -48,7 +49,7 @@ const onError = err => {
         <IKUpload
             fileName = "test-upload.png"
             onError = {onError}
-            onSUccess = {onSUccess}
+            onSuccess = {onSuccess}
             useUniqueFileName={true}
             onUploadProgress = {onUploadProgress}
             onUploadStart = {onUploadStart}
