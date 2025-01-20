@@ -33,9 +33,21 @@ app.get("/api/upload", (req, res)=>{
     res.send(result)
 });
 
-app.post("/api/chats", (req, res)=>{
-    const {text} = req.body
+app.post("/api/chats", async (req, res) => {
+    const {userId, text} = req.body;
+
     console.log(text)
+    try {
+
+        const newChat = new Chat ({
+            userId: userId,
+            history: [{role: "user", parts: [{text}]}],
+        });
+        const savedChat = await newChat.save();
+    }  catch(err) {
+        console.log(err)
+        res.status(500).send("Error creating chat!")
+    }
 });
 
 app.listen(port, () =>{
