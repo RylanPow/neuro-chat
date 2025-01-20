@@ -3,6 +3,8 @@ import cors from "cors";
 import ImageKit from "imagekit";
 import 'dotenv/config';
 import mongoose from "mongoose";
+import UserChats from "./models/userChats.js";
+import Chat from "./models/chat.js";
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -38,12 +40,40 @@ app.post("/api/chats", async (req, res) => {
 
     console.log(text)
     try {
-
+        //CREATE A NEW CHAT
         const newChat = new Chat ({
             userId: userId,
             history: [{role: "user", parts: [{text}]}],
         });
+
         const savedChat = await newChat.save();
+
+        //CHECK IF USERCHAT EXISTS
+        const userChats = await UserChats.find({userId: userId});
+
+        //IF NOT EXIST CREATE NEW AND APPEND CHAT TO CHATS ARRAY
+        if (!userChats.length) {
+            const newUserChats = new UserChats ({
+                userId: userId,
+                chats: [
+                    {
+                        _id: savedChat.id,
+                        title: text.substring(0, 40),
+                    }
+                ]
+            })
+            await newUserChats.save()
+        } else {
+            await UserChats.updateOne({userId: userId},{
+                $push:{
+                    chats:{
+                        _id: savedChat._id,
+                        title: text.substring(0, 40),
+                    },
+                },
+            })
+            res.status(201).send(newChat._id);
+        }
     }  catch(err) {
         console.log(err)
         res.status(500).send("Error creating chat!")
