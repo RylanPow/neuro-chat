@@ -35,10 +35,11 @@ const NewPrompt = ({data}) => {
     });
 
     const endRef = useRef(null);
+    const formRef = useRef(null);
 
     useEffect(() => {
         endRef.current.scrollIntoView({behavior: "smooth"})
-    }, [question, answer, img.dbData]);
+    }, [data, question, answer, img.dbData]);
 
     const queryClient = useQueryClient();
 
@@ -58,7 +59,9 @@ const NewPrompt = ({data}) => {
             }).then(res => res.json());
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['chat', data._id]}).then(() => {
+            queryClient.invalidateQueries({ queryKey: ['chat', data._id]}).then(() => 
+                {
+                formRef.current.reset();
                 setQuestion("")
                 setAnswer("")
                 setImg({
@@ -75,8 +78,8 @@ const NewPrompt = ({data}) => {
         },
     });
 
-    const add = async (text) =>{
-        setQuestion(text);
+    const add = async (text, isInitial) =>{
+        if (!isInitial) setQuestion(text);
         
         try {
         const result = await chat.sendMessageStream(Object.entries(img.aiData).length ? [img.aiData, text] : [text]);
@@ -99,8 +102,22 @@ const NewPrompt = ({data}) => {
 
         const text = e.target.text.value;
         if (!text) return;
-        add(text);
+        add(text, false);
     };
+
+    // IF ONLY ONE MESSAGE IN HISTORY, I.E. WHEN CREATING BRAND NEW CHAT
+    // WOULD PREV NOT RESPOND UNLESS QUESTION SUBMITTED IN A CHAT
+    // WOULD NOT WORK FROM DASHBOARD OR NEW cHAT BUTTON
+    // IN PRODUCTION WE DON'T NEED THIS
+    const hasRun = useRef(false)
+    useEffect(()=>{
+        if(!hasRun.current){
+        if(data?.history?.length === 1) {
+            add(data.history[0].parts[0].text, true);
+        }
+    } 
+    hasRun.current = true;
+    }, [])
 
     return (
         <>
@@ -118,7 +135,7 @@ const NewPrompt = ({data}) => {
 
 
         <div className="endChat" ref={endRef}></div>
-            <form className = 'newForm' onSubmit={handleSubmit}>
+            <form className = 'newForm' onSubmit={handleSubmit} ref={formRef}>
                 <Upload setImg = {setImg}/>
                 <input id = 'file' type="file" multiple={false} hidden/>
                 <input type = 'text' name="text" placeholder = 'Ask anything...' />
