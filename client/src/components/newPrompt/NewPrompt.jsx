@@ -4,8 +4,10 @@ import Upload from '../upload/Upload';
 import { IKImage } from 'imagekitio-react';
 import model from "../../lib/gemini"
 import Markdown from "react-markdown"
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 
-const NewPrompt = () => {
+
+const NewPrompt = ({data}) => {
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
 
@@ -13,7 +15,7 @@ const NewPrompt = () => {
         isLoading: false,
         error:"",
         dbData: {},
-        aiData: {}
+        aiData: {},
     })
 
     const chat = model.startChat({
@@ -38,9 +40,45 @@ const NewPrompt = () => {
         endRef.current.scrollIntoView({behavior: "smooth"})
     }, [question, answer, img.dbData]);
 
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+
+        mutationFn: () => {
+            return fetch(`${import.meta.env.VITE_API_URL}/api/chats/${data._id}`, {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ question: question.length ? question : undefined,
+                    answer, 
+                    img: img.dbData?.filePath || undefined,
+                 }),
+            }).then(res => res.json());
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['chat', data._id]}).then(() => {
+                setQuestion("")
+                setAnswer("")
+                setImg({
+                    isLoading: false,
+                    error:"",
+                    dbData: {},
+                    aiData: {},
+                });
+            });
+            navigate(`/dashboard/chats/${id}`);
+        },
+        onError: (err) => {
+            console.log(err);
+        },
+    });
+
     const add = async (text) =>{
         setQuestion(text);
-
+        
+        try {
         const result = await chat.sendMessageStream(Object.entries(img.aiData).length ? [img.aiData, text] : [text]);
 
         let accumulatedText = '';
@@ -50,8 +88,10 @@ const NewPrompt = () => {
             accumulatedText += chunkText;
             setAnswer(accumulatedText);
         }
-
-        setImg({isLoading: false, error:"", dbData: {}, aiData: {}})
+        mutation.mutate();
+    } catch(err){
+        console.log(err)
+    }
     };
 
     const handleSubmit = async (e) => {

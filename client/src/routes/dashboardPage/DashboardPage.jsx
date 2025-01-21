@@ -24,7 +24,7 @@ const DashboardPage = () => {
             queryClient.invalidateQueries({ queryKey: ['userChats']});
             navigate(`/dashboard/chats/${id}`);
         },
-    })
+    });
 
     const handleSubmit = async (e) => {
         e.preventDefault();

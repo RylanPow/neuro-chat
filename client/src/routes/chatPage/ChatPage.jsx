@@ -5,6 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import Markdown from 'react-markdown';
 import React from 'react';
+import {  IKImage } from 'imagekitio-react';
+
 
 const ChatPage = () => {
 
@@ -50,7 +52,7 @@ const ChatPage = () => {
                         </React.Fragment>
                     )
                 )}
-                    <NewPrompt/>
+                    <NewPrompt data = {data}/>
                 </div>
             </div>
         </div>
