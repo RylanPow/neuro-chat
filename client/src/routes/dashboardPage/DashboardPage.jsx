@@ -57,7 +57,7 @@ const DashboardPage = () => {
                     </div>
                     <div className = 'option'>
                         <img src = '/image.png' alt = ''/>
-                        <span>Create a New Chat</span>
+                        <span>Analyze Images</span>
                     </div>
                     <div className = 'option'>
                         <img src = "/code.png" alt = ""/>

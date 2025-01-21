@@ -76,4 +76,34 @@
         }
 
     }
+
+    .chat-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .chat-item:hover .delete-btn {
+        opacity: 1;
+    }
+    
+    .delete-btn {
+        opacity: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        transition: opacity 0.2s ease;
+    }
+    
+    .delete-btn img {
+        width: 23px;
+        height: 14px;
+    }
+    
+    .delete-btn:hover {
+        opacity: 1;
+        color: red;
+    }
 }
