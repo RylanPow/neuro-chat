@@ -21,6 +21,25 @@
         display: flex;
         flex-direction: column;
         overflow: auto;
+
+        
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #1e1e24;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #4a4a4a;
+            border-radius: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
     }
     a{
         padding: 10px;

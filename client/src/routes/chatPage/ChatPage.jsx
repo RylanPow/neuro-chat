@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import Markdown from 'react-markdown';
+import React from 'react';
 
 const ChatPage = () => {
 
@@ -29,7 +30,7 @@ const ChatPage = () => {
                     : error 
                     ? "Something went wrong!" 
                     : data?.history?.map((message, i) => (
-                        <>
+                        <React.Fragment key = {i}>
                         {message.img && (
                             <IKImage urlEndpoint = {import.meta.env.VITE_IMAGE_KIT_ENDPOINT}
                             path = {message.img}
@@ -46,7 +47,7 @@ const ChatPage = () => {
                         } key = {i}>
                             <Markdown>{message.parts[0].text}</Markdown>
                         </div>
-                        </>
+                        </React.Fragment>
                     )
                 )}
                     <NewPrompt/>
