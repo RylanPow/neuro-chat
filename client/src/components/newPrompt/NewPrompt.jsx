@@ -61,7 +61,7 @@ const NewPrompt = ({data}) => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['chat', data._id]}).then(() => 
                 {
-                formRef.current.reset();
+                //formRef.current.reset();
                 setQuestion("")
                 setAnswer("")
                 setImg({
@@ -71,7 +71,7 @@ const NewPrompt = ({data}) => {
                     aiData: {},
                 });
             });
-            navigate(`/dashboard/chats/${id}`);
+            //navigate(`/dashboard/chats/${id}`);
         },
         onError: (err) => {
             console.log(err);
@@ -127,7 +127,7 @@ const NewPrompt = ({data}) => {
             <IKImage 
                 urlEndpoint = {import.meta.env.VITE_IMAGE_KIT_ENDPOINT}
             path={img.dbData?.filePath}
-            width = "380"
+            transformation = {[{width: "380"}]}
             />
         )}
         {question && <div className = 'message user'>{question}</div>}

@@ -45,7 +45,7 @@ app.get("/api/upload", (req, res)=>{
 // })
 
 app.post("/api/chats", ClerkExpressRequireAuth(), async (req, res) => {
-    const { text} = req.body;
+    const {text} = req.body;
     const userId = req.auth.userId
 
     console.log(text)
@@ -137,7 +137,7 @@ app.put("/api/chats/:id", ClerkExpressRequireAuth(), async (req, res) => {
                 }
             }
         }); 
-        res.status(200).send();
+        res.status(200).send(updatedChat);
     } catch (err) {
         console.log(err);
         res.status(500).send("Error adding conversation");

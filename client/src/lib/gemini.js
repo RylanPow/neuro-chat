@@ -7,7 +7,7 @@ const safetySetting = [
     },
     {
         category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-        threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOE
+        threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE
     },
 ];
 
