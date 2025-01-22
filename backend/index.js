@@ -147,16 +147,23 @@ app.put("/api/chats/:id", ClerkExpressRequireAuth(), async (req, res) => {
 
 app.delete("/api/chats/:id", ClerkExpressRequireAuth(), async (req, res) => {
     const userId = req.auth.userId;
+    const chatId = req.params.id;
+
     try {
-        // Delete the chat
-        await Chat.deleteOne({ _id: req.params.id, userId });
+        // DELETE CHAT DOCUMENT FROM COLLECTION
+        const deletedChat = await Chat.deleteOne({ _id: chatId, userId });
         
-        // Remove the chat from UserChats
+        // IF NO CHAT TO DELETE RETURN ERROR
+        if (deletedChat.deletedCount === 0) {
+            return res.status(404).send("Chat not found!");
+        }
+
+        // REMOVE THE REFERENCE FROM USER CHATS
         await UserChats.updateOne(
             { userId },
-            { $pull: { chats: { _id: req.params.id } } }
+            { $pull: { chats: { _id: chatId } } }
         );
-        
+
         res.status(200).send("Chat deleted successfully");
     } catch (err) {
         console.log(err);
