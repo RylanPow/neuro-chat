@@ -19,12 +19,16 @@ const NewPrompt = ({data}) => {
     })
 
     const chat = model.startChat({
-        history: [data?.history.map(({role, parts})=>(
+        history: [
             {
-                role,
-                parts: [{text : parts[0].text}]
+                role: "user",
+                parts: [{text: "H"}]
+            },
+            {
+                role: "model",
+                parts: [{text: "f"}]
             }
-        ))],
+        ],
         generationConfig: {
             //maxOutputTokens: 100,
         },
