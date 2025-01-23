@@ -16,7 +16,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename)
 
 app.use(cors({
-    origin: process.env.CLIENT_URL,
+    origin: "https://neuro-chat.vercel.app",
     credentials: true,
 }))
 
