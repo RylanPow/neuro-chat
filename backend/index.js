@@ -6,13 +6,13 @@ import mongoose from "mongoose";
 import UserChats from "./models/userChats.js";
 import Chat from "./models/chat.js";
 import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node' 
-import url from "url";
+import url, { fileURLToPath } from "url";
 import path from "path";
 
 const port = process.env.PORT || 3000;
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url)
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename)
 
 app.use(cors({
