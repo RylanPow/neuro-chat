@@ -11,20 +11,21 @@ const DashboardPage = () => {
 
     const mutation = useMutation({
         mutationFn: (text) => {
-            return fetch(`${import.meta.env.VITE_API_URL}/api/chats`, {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ text }),
-            }).then(res => res.json());
+          return fetch(`${import.meta.env.VITE_API_URL}/api/chats`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text }),
+          }).then((res) => res.json());
         },
         onSuccess: (id) => {
-            queryClient.invalidateQueries({ queryKey: ['userChats']});
-            navigate(`/dashboard/chats/${id}`);
+          // Invalidate and refetch
+          queryClient.invalidateQueries({ queryKey: ["userChats"] });
+          navigate(`/dashboard/chats/${id}`);
         },
-    });
+      });
 
     const handleSubmit = async (e) => {
         e.preventDefault();

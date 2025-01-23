@@ -14,7 +14,9 @@ const queryClient = new QueryClient()
 
 const RootLayout = () => {
     return (
-        <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+        <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/"
+        debug ={true}
+        >
             <QueryClientProvider client = {queryClient}>
         <div className="rootLayout">
             <header>
