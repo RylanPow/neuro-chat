@@ -39,14 +39,6 @@ const imagekit = new ImageKit({
 
 
 
-  app.use(clerkMiddleware({
-    debug: true, // Log authentication issues
-    cookieOptions: { 
-      secure: true,
-      sameSite: "none", 
-    }
-  }));
-
 app.get("/api/upload", (req, res)=>{
     const result = imagekit.getAuthenticationParameters();
     res.send(result)
@@ -185,10 +177,10 @@ app.use((err, req, res, next) => {
     res.status(401).send("Unauthenticated");
 });
 
-app.use(express.static(path.join(__dirname, "../client")))
+app.use(express.static(path.join(__dirname, "../client/dist")))
 
 app.get("*", (req, res)=>{
-    res.sendFile(path.join(__dirname, "../client", "index.html"))
+    res.sendFile(path.join(__dirname, "../client/dist", "index.html"))
 })
 
 app.listen(port, () =>{
