@@ -37,7 +37,15 @@ const imagekit = new ImageKit({
     privateKey: process.env.IMAGE_KIT_PRIVATE_KEY
 })
 
-app.use(clerkMiddleware());
+
+
+  app.use(clerkMiddleware({
+    debug: true, // Log authentication issues
+    cookieOptions: { 
+      secure: true,
+      sameSite: "none", 
+    }
+  }));
 
 app.get("/api/upload", (req, res)=>{
     const result = imagekit.getAuthenticationParameters();
