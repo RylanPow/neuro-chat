@@ -92,6 +92,7 @@ app.post("/api/chats", requireAuth(), async (req, res) => {
 
 app.get("/api/userchats", requireAuth(), async (req, res) => {
     const userId = req.auth.userId;
+    console.log(req.auth)
     try {
         const userChats = await UserChats.find({ userId })
         
@@ -177,7 +178,7 @@ app.use((err, req, res, next) => {
     res.status(401).send("Unauthenticated");
 });
 
-app.use(express.static(path.join(__dirname, "../client/")))
+app.use(express.static(path.join(__dirname, "../client")))
 
 app.get("*", (req, res)=>{
     res.sendFile(path.join(__dirname, "../client", "index.html"))
