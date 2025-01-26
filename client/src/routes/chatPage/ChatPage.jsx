@@ -13,12 +13,19 @@ const ChatPage = () => {
     const path = useLocation().pathname;
     const chatId = path.split("/").pop();
 
+    const { getToken, isLoaded, isSignedIn } = useAuth();
+    const sessionToken = getToken();
+
+
     
     const { isPending, error, data } = useQuery({
         queryKey: ['chat', chatId],
         queryFn: () =>
             fetch(`${import.meta.env.VITE_API_URL}/api/chats/${chatId}`, {
                 credentials: "include",
+                headers: {
+                    "Authorization": `Bearer ${sessionToken}`,
+                  },
             }).then((res) =>
                 res.json()),
     });

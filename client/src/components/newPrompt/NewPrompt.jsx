@@ -8,6 +8,12 @@ import { useQueryClient, useMutation } from '@tanstack/react-query';
 
 
 const NewPrompt = ({data}) => {
+
+    const { getToken, isLoaded, isSignedIn } = useAuth();
+    const sessionToken = getToken();
+
+
+
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
 
@@ -51,7 +57,8 @@ const NewPrompt = ({data}) => {
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                },
+                    "Authorization": `Bearer ${sessionToken}`,
+                  },
                 body: JSON.stringify({ question: question.length ? question : undefined,
                     answer, 
                     img: img.dbData?.filePath || undefined,

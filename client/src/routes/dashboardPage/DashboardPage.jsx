@@ -8,6 +8,10 @@ const DashboardPage = () => {
     const queryClient = useQueryClient();
 
     const navigate = useNavigate();
+    
+    const { getToken, isLoaded, isSignedIn } = useAuth();
+    const sessionToken = getToken();
+
 
     const mutation = useMutation({
         mutationFn: (text) => {
@@ -15,8 +19,9 @@ const DashboardPage = () => {
             method: "POST",
             credentials: "include",
             headers: {
-              "Content-Type": "application/json",
-            },
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionToken}`,
+              },
             body: JSON.stringify({ text }),
           }).then((res) => res.json());
         },
