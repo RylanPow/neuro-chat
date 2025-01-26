@@ -73,7 +73,7 @@ const ChatList = () => {
     },
     onSuccess: () => {
       // Invalidate the user chats query to refetch data
-      queryClient.invalidateQueries({ queryKey: ['userCh'] });
+      queryClient.invalidateQueries({ queryKey: ['userChats'] });
     },
   });
 
