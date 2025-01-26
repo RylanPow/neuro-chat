@@ -12,7 +12,6 @@ const queryClient = new QueryClient();
 
 const RootLayout = () => {
   return (
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} proxy="https://neuro-chat.onrender.com" afterSignOutUrl="/">
       <QueryClientProvider client={queryClient}>
         <div className="rootLayout">
           <header>
@@ -31,7 +30,6 @@ const RootLayout = () => {
           </main>
         </div>
       </QueryClientProvider>
-    </ClerkProvider>
   );
 };
 

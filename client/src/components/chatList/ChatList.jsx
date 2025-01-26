@@ -1,35 +1,88 @@
 import './chatList.css'
 import { Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useAuth } from '@clerk/clerk-react'
 
 const ChatList = () => {
-    const queryClient = useQueryClient();
-    
-    const { isPending, error, data } = useQuery({
-        queryKey: ['userChats'],
-        queryFn: () =>
-            fetch(`${import.meta.env.VITE_API_URL}/api/userchats`, {
-                credentials: "include",
-            }).then((res) =>
-                res.json()),
-    });
+  const { getToken, isLoaded, isSignedIn } = useAuth();
+  const queryClient = useQueryClient();
 
-    const deleteMutation = useMutation({
-        mutationFn: (chatId) => {
-            return fetch(`${import.meta.env.VITE_API_URL}/api/chats/${chatId}`, {
-                method: 'DELETE',
-                credentials: 'include',
-            });
+  // Fetch user chats
+  const { isPending, error, data } = useQuery({
+    queryKey: ['userChats'],
+    queryFn: async () => {
+      // Ensure the user is authenticated
+      if (!isLoaded || !isSignedIn) {
+        throw new Error('User is not authenticated');
+      }
+
+      // Retrieve the session token
+      const sessionToken = await getToken();
+      console.log('Session Token:', sessionToken);
+
+      if (!sessionToken) {
+        throw new Error('Failed to retrieve session token');
+      }
+
+      // Fetch user chats from the backend
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/userchats`, {
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${sessionToken}`,
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['userChats'] });
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user chats');
+      }
+
+      return response.json();
+    },
+  });
+
+  // Delete a chat
+  const deleteMutation = useMutation({
+    mutationFn: async (chatId) => {
+      // Ensure the user is authenticated
+      if (!isLoaded || !isSignedIn) {
+        throw new Error('User is not authenticated');
+      }
+
+      // Retrieve the session token
+      const sessionToken = await getToken();
+      console.log('Session Token:', sessionToken);
+
+      if (!sessionToken) {
+        throw new Error('Failed to retrieve session token');
+      }
+
+      // Send a DELETE request to the backend
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/chats/${chatId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${sessionToken}`,
         },
-    });
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete chat');
+      }
+
+      return response;
+    },
+    onSuccess: () => {
+      // Invalidate the user chats query to refetch data
+      queryClient.invalidateQueries({ queryKey: ['userChats'] });
+    },
+  });
 
     const handleDelete = (e, chatId) => {
         e.preventDefault(); // Prevent navigation
         deleteMutation.mutate(chatId);
     };
+
+
 
     return (
         <div className='chatList'>
