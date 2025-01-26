@@ -29,11 +29,11 @@ const DashboardPage = () => {
             }
             return response.json();
         },
-        onSuccess: (data) => {
+        onSuccess: (id) => {
             // Invalidate and refetch the userChats query
             queryClient.invalidateQueries({ queryKey: ["userChats"] });
             // Navigate to the newly created chat
-            navigate(`/dashboard/chats/${data._id}`);
+            navigate(`/dashboard/chats/${id}`);
         },
         onError: (error) => {
             console.error("Error creating chat:", error);

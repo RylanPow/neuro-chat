@@ -77,6 +77,11 @@ const ChatList = () => {
     },
   });
 
+    const handleDelete = (e, chatId) => {
+        e.preventDefault(); // Prevent navigation
+        deleteMutation.mutate(chatId);
+    };
+
 
 
     return (
