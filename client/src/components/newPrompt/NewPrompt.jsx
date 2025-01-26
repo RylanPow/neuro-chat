@@ -5,126 +5,124 @@ import { IKImage } from 'imagekitio-react';
 import model from "../../lib/gemini"
 import Markdown from "react-markdown"
 import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { useAuth } from '@clerk/clerk-react'
 
 
-const NewPrompt = ({data}) => {
-
+const NewPrompt = ({ data }) => {
     const { getToken, isLoaded, isSignedIn } = useAuth();
-    const sessionToken = getToken();
-
-
+    
 
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
-
-    const [img, setImg] = useState ({
+    const [img, setImg] = useState({
         isLoading: false,
-        error:"",
+        error: "",
         dbData: {},
         aiData: {},
-    })
+    });
 
     const chat = model.startChat({
         history: [
             {
                 role: "user",
-                parts: [{text: "H"}]
+                parts: [{ text: "H" }],
             },
             {
                 role: "model",
-                parts: [{text: "f"}]
-            }
+                parts: [{ text: "f" }],
+            },
         ],
         generationConfig: {
-            //maxOutputTokens: 100,
+            // maxOutputTokens: 100,
         },
     });
 
     const endRef = useRef(null);
     const formRef = useRef(null);
-
-    useEffect(() => {
-        endRef.current.scrollIntoView({behavior: "smooth"})
-    }, [data, question, answer, img.dbData]);
+    const hasRun = useRef(false); // To handle initial chat message
 
     const queryClient = useQueryClient();
 
-    const mutation = useMutation({
+    // Scroll to the bottom when data, question, answer, or img.dbData changes
+    useEffect(() => {
+        endRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [data, question, answer, img.dbData]);
 
-        mutationFn: () => {
-            return fetch(`${import.meta.env.VITE_API_URL}/api/chats/${data._id}`, {
+    // Handle initial chat message for new chats
+    useEffect(() => {
+        if (!hasRun.current && data?.history?.length === 1) {
+            add(data.history[0].parts[0].text, true);
+            hasRun.current = true;
+        }
+    }, [data]);
+
+    // Mutation for updating chat
+    const updateChatMutation = useMutation({
+        mutationFn: async () => {
+            const sessionToken = await getToken();
+            
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/chats/${data._id}`, {
                 method: "PUT",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${sessionToken}`,
-                  },
-                body: JSON.stringify({ question: question.length ? question : undefined,
-                    answer, 
+                    Authorization: `Bearer ${sessionToken}`,
+                },
+                body: JSON.stringify({
+                    question: question.length ? question : undefined,
+                    answer,
                     img: img.dbData?.filePath || undefined,
-                 }),
-            }).then(res => res.json());
+                }),
+            });
+            return response.json();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['chat', data._id]}).then(() => 
-                {
-                //formRef.current.reset();
-                setQuestion("")
-                setAnswer("")
+            queryClient.invalidateQueries({ queryKey: ["chat", data._id] }).then(() => {
+                setQuestion("");
+                setAnswer("");
                 setImg({
                     isLoading: false,
-                    error:"",
+                    error: "",
                     dbData: {},
                     aiData: {},
                 });
             });
-            //navigate(`/dashboard/chats/${id}`);
         },
         onError: (err) => {
-            console.log(err);
+            console.error("Error updating chat:", err);
         },
     });
 
-    const add = async (text, isInitial) =>{
+    // Function to add a message to the chat
+    const add = async (text, isInitial) => {
         if (!isInitial) setQuestion(text);
-        
-        try {
-        const result = await chat.sendMessageStream(Object.entries(img.aiData).length ? [img.aiData, text] : [text]);
 
-        let accumulatedText = '';
-        for await (const chunk of result.stream) {
-            const chunkText = chunk.text();
-            console.log(chunkText);
-            accumulatedText += chunkText;
-            setAnswer(accumulatedText);
+        try {
+            const result = await chat.sendMessageStream(
+                Object.entries(img.aiData).length ? [img.aiData, text] : [text]
+            );
+
+            let accumulatedText = "";
+            for await (const chunk of result.stream) {
+                const chunkText = chunk.text();
+                accumulatedText += chunkText;
+                setAnswer(accumulatedText);
+            }
+
+            updateChatMutation.mutate();
+        } catch (err) {
+            console.error("Error sending message:", err);
         }
-        mutation.mutate();
-    } catch(err){
-        console.log(err)
-    }
     };
 
+    // Handle form submission
     const handleSubmit = async (e) => {
-        e.preventDefault()
-
+        e.preventDefault();
         const text = e.target.text.value;
         if (!text) return;
         add(text, false);
     };
 
-    // IF ONLY ONE MESSAGE IN HISTORY, I.E. WHEN CREATING BRAND NEW CHAT
-    // WOULD PREV NOT RESPOND UNLESS QUESTION SUBMITTED IN A CHAT
-    // WOULD NOT WORK FROM DASHBOARD OR NEW cHAT BUTTON
-    // IN PRODUCTION WE DON'T NEED THIS
-    const hasRun = useRef(false)
-    useEffect(()=>{
-        if(!hasRun.current){
-        if(data?.history?.length === 1) {
-            add(data.history[0].parts[0].text, true);
-        }
-    } 
-    hasRun.current = true;
-    }, [])
 
     return (
         <>
